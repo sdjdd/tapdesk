@@ -3,16 +3,15 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Post,
-  Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
-import { CurrentTenant } from '@/common';
+import { CurrentTenant, CurrentUser } from '@/common';
 import { TenantEntity } from '@/modules/tenant';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
+import { UserEntity } from '.';
 
 @Controller('clients/:tenantId/users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -27,9 +26,9 @@ export class UserController {
     return this.userService.create(tenant.id, createUserDto);
   }
 
-  @Post('login')
-  @UseGuards(AuthGuard('local'))
-  async login(@Req() req: Request) {
-    return req.user;
+  @Post('who-am-i')
+  @UseGuards(AuthGuard('basic'))
+  async login(@CurrentUser() user: UserEntity) {
+    return user;
   }
 }

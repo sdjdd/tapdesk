@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TenantMiddleware } from './common';
 import { TenantModule } from './modules/tenant';
 import { UserController, UserModule } from './modules/user';
-import { AuthModule } from './modules/auth/auth.module';
+import { AuthModule } from './auth/auth.module';
 
 const typeormModule = TypeOrmModule.forRoot({
   type: 'mysql',
