@@ -29,6 +29,10 @@ export class UserEntity {
   @Expose()
   email?: string;
 
+  @Column()
+  @Expose()
+  role: 'end-user' | 'agent' | 'admin';
+
   @CreateDateColumn({ update: false })
   @Expose()
   created_at: Date;
@@ -52,5 +56,13 @@ export class UserEntity {
       throw new Error('User entity has no password, check sql statement');
     }
     return argon2.verify(this.password, password);
+  }
+
+  isAdmin(): boolean {
+    return this.role === 'admin';
+  }
+
+  isAgent() {
+    return this.isAdmin() || this.role === 'agent';
   }
 }

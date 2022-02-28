@@ -10,7 +10,7 @@ export class categories1646036845480 implements MigrationInterface {
         name        varchar(255)     NOT NULL,
         description varchar(255),
         position    smallint(5) unsigned,
-        active      boolean          NOT NULL DEFAULT '1',
+        active      boolean          NOT NULL DEFAULT TRUE,
         created_at  datetime(3)      NOT NULL DEFAULT NOW(3),
         updated_at  datetime(3)      NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
         PRIMARY KEY (id),

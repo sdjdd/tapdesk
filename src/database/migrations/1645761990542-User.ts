@@ -9,11 +9,12 @@ export class User1645761990542 implements MigrationInterface {
         username   varchar(191)     NOT NULL,
         password   varchar(255)     NOT NULL,
         email      varchar(191),
+        role       varchar(191)     NOT NULL,
         created_at datetime(3)      NOT NULL DEFAULT NOW(3),
         updated_at datetime(3)      NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
         PRIMARY KEY (id),
-        CONSTRAINT fk_tenants_id FOREIGN KEY (tenant_id) REFERENCES tenants (id) ON DELETE RESTRICT ON UPDATE CASCADE,
-        UNIQUE KEY unq_tenant_id_username (tenant_id,username)
+        CONSTRAINT fk_tenants_id_users_tenant_id FOREIGN KEY (tenant_id) REFERENCES tenants (id) ON DELETE RESTRICT ON UPDATE CASCADE,
+        UNIQUE KEY unq_users_tenant_id_username (tenant_id,username)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
     `);
   }

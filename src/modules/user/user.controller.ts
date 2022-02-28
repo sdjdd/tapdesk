@@ -1,4 +1,10 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentTenant, CurrentUser } from '@/common';
 import { TenantEntity } from '@/modules/tenant';
@@ -11,11 +17,16 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
-  create(
+  @UseGuards(AuthGuard('basic'))
+  async create(
     @CurrentTenant() tenant: TenantEntity,
-    @Body() createUserDto: CreateUserDto,
+    @CurrentUser() user: UserEntity,
+    @Body() data: CreateUserDto,
   ) {
-    return this.userService.create(tenant.id, createUserDto);
+    if (data.role && !user.isAdmin()) {
+      throw new ForbiddenException('Only admin users can set user role');
+    }
+    return this.userService.create(tenant.id, data);
   }
 
   @Post('who-am-i')
