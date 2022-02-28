@@ -3,8 +3,9 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TenantMiddleware } from './common';
 import { TenantModule } from './modules/tenant';
-import { UserController, UserModule } from './modules/user';
+import { UserModule } from './modules/user';
 import { AuthModule } from './auth/auth.module';
+import { CategoryModule } from './modules/category';
 
 const typeormModule = TypeOrmModule.forRoot({
   type: 'mysql',
@@ -20,10 +21,16 @@ const typeormModule = TypeOrmModule.forRoot({
 });
 
 @Module({
-  imports: [typeormModule, TenantModule, UserModule, AuthModule],
+  imports: [
+    typeormModule,
+    TenantModule,
+    UserModule,
+    AuthModule,
+    CategoryModule,
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TenantMiddleware).forRoutes(UserController);
+    consumer.apply(TenantMiddleware).forRoutes('clients/:tenantId');
   }
 }

@@ -5,32 +5,36 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import argon2 from 'argon2';
 
-@Entity({ name: 'users' })
+@Entity('users')
+@Exclude()
 export class UserEntity {
   @PrimaryGeneratedColumn()
+  @Expose()
   id: number;
 
   @Column()
-  @Exclude()
   tenant_id: number;
 
   @Column()
+  @Expose()
   username: string;
 
   @Column({ select: false })
-  @Exclude()
   password?: string;
 
   @Column()
+  @Expose()
   email?: string;
 
   @CreateDateColumn({ update: false })
+  @Expose()
   created_at: Date;
 
   @UpdateDateColumn()
+  @Expose()
   updated_at: Date;
 
   constructor(data?: Partial<UserEntity>) {

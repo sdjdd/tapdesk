@@ -1,11 +1,4 @@
-import {
-  Body,
-  ClassSerializerInterceptor,
-  Controller,
-  Post,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentTenant, CurrentUser } from '@/common';
 import { TenantEntity } from '@/modules/tenant';
@@ -14,7 +7,6 @@ import { UserService } from './user.service';
 import { UserEntity } from '.';
 
 @Controller('clients/:tenantId/users')
-@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(private userService: UserService) {}
 

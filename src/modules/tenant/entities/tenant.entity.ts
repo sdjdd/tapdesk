@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'tenants' })
+@Entity('tenants')
 export class TenantEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -14,7 +14,7 @@ export class TenantEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   description?: string | null;
 
   @CreateDateColumn({ update: false })
