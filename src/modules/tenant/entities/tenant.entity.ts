@@ -6,8 +6,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'projects' })
-export class ProjectEntity {
+@Entity({ name: 'tenants' })
+export class TenantEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -15,11 +15,17 @@ export class ProjectEntity {
   name: string;
 
   @Column()
-  description?: string;
+  description?: string | null;
 
   @CreateDateColumn({ update: false })
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  constructor(data?: Partial<TenantEntity>) {
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
 }

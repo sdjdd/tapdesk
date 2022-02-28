@@ -2,34 +2,34 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
-  Param,
-  ParseIntPipe,
   Post,
+  Req,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import argon2 from 'argon2';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
+import { CurrentTenant } from '@/common';
+import { TenantEntity } from '@/modules/tenant';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserEntity } from './entities/user.entity';
+import { UserService } from './user.service';
 
-@Controller('projects/:projectId/users')
+@Controller('clients/:tenantId/users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
-  constructor(
-    @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
-  ) {}
+  constructor(private userService: UserService) {}
 
   @Post()
-  async create(
-    @Param('projectId', ParseIntPipe) projectId: number,
+  create(
+    @CurrentTenant() tenant: TenantEntity,
     @Body() createUserDto: CreateUserDto,
   ) {
-    const user = new UserEntity(createUserDto);
-    user.project_id = projectId;
-    user.password = await argon2.hash(createUserDto.password);
-    await this.userRepository.insert(user);
-    return user;
+    return this.userService.create(tenant.id, createUserDto);
+  }
+
+  @Post('login')
+  @UseGuards(AuthGuard('local'))
+  async login(@Req() req: Request) {
+    return req.user;
   }
 }

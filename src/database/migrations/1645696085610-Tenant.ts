@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Project1645696085610 implements MigrationInterface {
+export class Tenant1645696085610 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.query(`
-      CREATE TABLE projects (
+      CREATE TABLE tenants (
         id          int(11) unsigned NOT NULL AUTO_INCREMENT,
         name        varchar(191)     NOT NULL,
         description varchar(255),
@@ -16,6 +16,6 @@ export class Project1645696085610 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('DROP TABLE projects;');
+    await queryRunner.query('DROP TABLE tenants;');
   }
 }
