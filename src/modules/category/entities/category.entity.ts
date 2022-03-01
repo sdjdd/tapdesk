@@ -20,10 +20,6 @@ export class CategoryEntity {
   @Column()
   tenant_id: number;
 
-  @Column()
-  @Expose()
-  parent_id?: number | null;
-
   @ManyToOne(() => CategoryEntity, (category) => category.children)
   @JoinColumn({ name: 'parent_id' })
   parent?: CategoryEntity;
@@ -35,9 +31,9 @@ export class CategoryEntity {
   @Expose()
   name: string;
 
-  @Column({ type: 'varchar' })
+  @Column()
   @Expose()
-  description?: string | null;
+  description: string;
 
   @Column()
   position?: number;
@@ -57,11 +53,5 @@ export class CategoryEntity {
   @Expose({ name: 'position' })
   getPosition(): number {
     return this.position ?? this.created_at.getTime();
-  }
-
-  constructor(data?: Partial<CategoryEntity>) {
-    if (data) {
-      Object.assign(this, data);
-    }
   }
 }

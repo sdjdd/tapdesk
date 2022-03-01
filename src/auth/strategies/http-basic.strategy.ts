@@ -11,7 +11,7 @@ export class HttpBasicStrategy extends PassportStrategy(BasicStrategy) {
   }
 
   async validate(req: Request, username: string, password: string) {
-    const user = await this.userService.findOneByUsernameAndSelectPassword(
+    const user = await this.userService.findOneForAuthentication(
       req.tenant.id,
       username,
     );

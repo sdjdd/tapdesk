@@ -8,7 +8,7 @@ export class categories1646036845480 implements MigrationInterface {
         tenant_id   int(11) unsigned NOT NULL,
         parent_id   int(11) unsigned,
         name        varchar(255)     NOT NULL,
-        description varchar(255),
+        description varchar(255)     NOT NULL DEFAULT '',
         position    smallint(5) unsigned,
         active      boolean          NOT NULL DEFAULT TRUE,
         created_at  datetime(3)      NOT NULL DEFAULT NOW(3),

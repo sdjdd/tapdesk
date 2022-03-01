@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { TenantService } from './tenant.service';
@@ -27,11 +19,7 @@ export class TenantController {
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    const tenant = this.tenantService.findOne(id);
-    if (!tenant) {
-      throw new NotFoundException(`client ${id} does not exist`);
-    }
-    return tenant;
+    return this.tenantService.findOneOrFail(id);
   }
 
   @Patch(':id')

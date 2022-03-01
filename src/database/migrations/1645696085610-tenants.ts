@@ -6,7 +6,7 @@ export class tenants1645696085610 implements MigrationInterface {
       CREATE TABLE tenants (
         id          int(11) unsigned NOT NULL AUTO_INCREMENT,
         name        varchar(191)     NOT NULL,
-        description varchar(255),
+        description varchar(255)     NOT NULL DEFAULT '',
         created_at  datetime(3)      DEFAULT NOW(3),
         updated_at  datetime(3)      DEFAULT NOW(3) ON UPDATE NOW(3),
         PRIMARY KEY (id),

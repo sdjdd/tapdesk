@@ -19,7 +19,9 @@ export class TenantService {
     if (tenant) {
       throw new ConflictException(`name "${data.name}" already exists`);
     }
-    tenant = new TenantEntity(data);
+    tenant = new TenantEntity();
+    tenant.name = data.name;
+    tenant.description = data.description ?? '';
     await this.tenantRepository.insert(tenant);
     return tenant;
   }
@@ -32,23 +34,28 @@ export class TenantService {
     return this.tenantRepository.findOne(id);
   }
 
+  async findOneOrFail(id: number): Promise<TenantEntity> {
+    const tenant = await this.findOne(id);
+    if (!tenant) {
+      throw new NotFoundException(`client ${id} does not exist`);
+    }
+    return tenant;
+  }
+
   findOneByName(name: string): Promise<TenantEntity | undefined> {
     return this.tenantRepository.findOne({ name });
   }
 
   async update(id: number, data: UpdateTenantDto) {
-    if (data.name !== undefined) {
-      const tenant = await this.findOneByName(data.name);
-      if (tenant && tenant.id !== id) {
+    const tenant = await this.findOneOrFail(id);
+    if (data.name !== undefined && data.name !== tenant.name) {
+      if (await this.findOneByName(data.name)) {
         throw new ConflictException(`name "${data.name}" already exists`);
       }
     }
-    const { affected } = await this.tenantRepository.update(id, {
+    await this.tenantRepository.update(id, {
       ...data,
       updated_at: () => 'NOW(3)',
     });
-    if (!affected) {
-      throw new NotFoundException(`client ${id} does not exist`);
-    }
   }
 }

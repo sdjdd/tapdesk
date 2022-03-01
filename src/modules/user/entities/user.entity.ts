@@ -15,8 +15,8 @@ export class UserEntity {
   @Expose()
   id: number;
 
-  @Column({ type: 'int' })
-  tenant_id?: number | null;
+  @Column()
+  tenant_id: number;
 
   @Column()
   @Expose()
@@ -25,13 +25,13 @@ export class UserEntity {
   @Column({ select: false })
   password?: string;
 
-  @Column({ type: 'varchar' })
+  @Column()
   @Expose()
-  email?: string | null;
+  email?: string;
 
   @Column()
   @Expose()
-  role: 'end-user' | 'agent' | 'admin' | 'system-admin';
+  role: 'end-user' | 'agent' | 'admin';
 
   @CreateDateColumn({ update: false })
   @Expose()
@@ -40,12 +40,6 @@ export class UserEntity {
   @UpdateDateColumn()
   @Expose()
   updated_at: Date;
-
-  constructor(data?: Partial<UserEntity>) {
-    if (data) {
-      Object.assign(this, data);
-    }
-  }
 
   async setPassword(password: string) {
     this.password = await argon2.hash(password);
