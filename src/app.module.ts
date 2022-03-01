@@ -1,35 +1,23 @@
-import path from 'path';
-import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TenantMiddleware } from './common';
 import { TenantModule } from './modules/tenant';
 import { UserModule } from './modules/user';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './modules/category';
-
-const typeormModule = TypeOrmModule.forRoot({
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: '',
-  database: 'tapdesk_dev',
-  autoLoadEntities: true,
-  migrations: [path.join(__dirname, 'database/migrations/*.{js,ts}')],
-  migrationsRun: true,
-  logging: true,
-});
+import { ConfigModule } from '@nestjs/config';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
-    typeormModule,
+    ConfigModule.forRoot({ isGlobal: true, cache: true }),
+    DatabaseModule,
     TenantModule,
     UserModule,
     AuthModule,
     CategoryModule,
   ],
 })
-export class AppModule {
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(TenantMiddleware).forRoutes('clients/:tenantId');
   }

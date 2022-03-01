@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 
 @Injectable()
-export class HttpStrategy extends PassportStrategy(BasicStrategy) {
+export class HttpBasicStrategy extends PassportStrategy(BasicStrategy) {
   constructor(private userService: UserService) {
     super({ passReqToCallback: true });
   }
