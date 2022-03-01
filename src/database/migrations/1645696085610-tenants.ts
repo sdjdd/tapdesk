@@ -10,7 +10,7 @@ export class tenants1645696085610 implements MigrationInterface {
         created_at  datetime(3)      DEFAULT NOW(3),
         updated_at  datetime(3)      DEFAULT NOW(3) ON UPDATE NOW(3),
         PRIMARY KEY (id),
-        UNIQUE KEY unq_name (name)
+        UNIQUE KEY unq_tenants_name (name)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
     `);
   }

@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateTenantDto } from './dto/create-tenant.dto';
@@ -11,9 +15,17 @@ export class TenantService {
   private tenantRepository: Repository<TenantEntity>;
 
   async create(data: CreateTenantDto): Promise<TenantEntity> {
-    const tenant = new TenantEntity(data);
+    let tenant = await this.findOneByName(data.name);
+    if (tenant) {
+      throw new ConflictException(`name "${data.name}" already exists`);
+    }
+    tenant = new TenantEntity(data);
     await this.tenantRepository.insert(tenant);
     return tenant;
+  }
+
+  find(): Promise<TenantEntity[]> {
+    return this.tenantRepository.find();
   }
 
   findOne(id: number): Promise<TenantEntity | undefined> {
@@ -24,12 +36,19 @@ export class TenantService {
     return this.tenantRepository.findOne({ name });
   }
 
-  async hasName(name: string): Promise<boolean> {
-    const tenant = await this.findOneByName(name);
-    return !!tenant;
-  }
-
   async update(id: number, data: UpdateTenantDto) {
-    await this.tenantRepository.update(id, data);
+    if (data.name !== undefined) {
+      const tenant = await this.findOneByName(data.name);
+      if (tenant && tenant.id !== id) {
+        throw new ConflictException(`name "${data.name}" already exists`);
+      }
+    }
+    const { affected } = await this.tenantRepository.update(id, {
+      ...data,
+      updated_at: () => 'NOW(3)',
+    });
+    if (!affected) {
+      throw new NotFoundException(`client ${id} does not exist`);
+    }
   }
 }

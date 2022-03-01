@@ -1,15 +1,14 @@
 import {
   Body,
-  ConflictException,
   Controller,
+  Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
-import { TenantEntity } from './entities/tenant.entity';
-import { FindTenantPipe } from './pipes/find-tenant.pipe';
 import { TenantService } from './tenant.service';
 
 @Controller('clients')
@@ -17,29 +16,26 @@ export class TenantController {
   constructor(private tenantService: TenantService) {}
 
   @Post()
-  async create(@Body() createTenantDto: CreateTenantDto) {
-    if (await this.tenantService.hasName(createTenantDto.name)) {
-      throw new ConflictException(
-        `Client with name "${createTenantDto.name}" already exists`,
-      );
+  create(@Body() data: CreateTenantDto) {
+    return this.tenantService.create(data);
+  }
+
+  @Get()
+  find() {
+    return this.tenantService.find();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: number) {
+    const tenant = this.tenantService.findOne(id);
+    if (!tenant) {
+      throw new NotFoundException(`client ${id} does not exist`);
     }
-    return this.tenantService.create(createTenantDto);
+    return tenant;
   }
 
   @Patch(':id')
-  async update(
-    @Param('id', FindTenantPipe) tenant: TenantEntity,
-    @Body() updateTenantDto: UpdateTenantDto,
-  ) {
-    if (
-      updateTenantDto.name &&
-      tenant.name !== updateTenantDto.name &&
-      (await this.tenantService.hasName(updateTenantDto.name))
-    ) {
-      throw new ConflictException(
-        `Client with name "${updateTenantDto.name}" already exists`,
-      );
-    }
-    await this.tenantService.update(tenant.id, updateTenantDto);
+  async update(@Param('id') id: number, @Body() data: UpdateTenantDto) {
+    await this.tenantService.update(id, data);
   }
 }

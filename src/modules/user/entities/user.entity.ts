@@ -15,8 +15,8 @@ export class UserEntity {
   @Expose()
   id: number;
 
-  @Column()
-  tenant_id: number;
+  @Column({ type: 'int' })
+  tenant_id?: number | null;
 
   @Column()
   @Expose()
@@ -25,13 +25,13 @@ export class UserEntity {
   @Column({ select: false })
   password?: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   @Expose()
-  email?: string;
+  email?: string | null;
 
   @Column()
   @Expose()
-  role: 'end-user' | 'agent' | 'admin';
+  role: 'end-user' | 'agent' | 'admin' | 'system-admin';
 
   @CreateDateColumn({ update: false })
   @Expose()
