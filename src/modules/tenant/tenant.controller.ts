@@ -1,4 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { ApiCreatedResponse } from '@nestjs/swagger';
+import { TenantEntity } from '.';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { TenantService } from './tenant.service';
@@ -8,6 +10,7 @@ export class TenantController {
   constructor(private tenantService: TenantService) {}
 
   @Post()
+  @ApiCreatedResponse({ description: 'tenant created', type: TenantEntity })
   create(@Body() data: CreateTenantDto) {
     return this.tenantService.create(data);
   }
