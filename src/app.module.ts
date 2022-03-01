@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './modules/category';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
+import { TicketModule } from './modules/ticket';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { DatabaseModule } from './database/database.module';
     UserModule,
     AuthModule,
     CategoryModule,
+    TicketModule,
   ],
 })
 export class AppModule implements NestModule {
